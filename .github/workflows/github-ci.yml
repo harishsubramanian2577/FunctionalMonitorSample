@@ -77,9 +77,9 @@ jobs:
           bat environment switch ${env} --profile=connectedAppProfile
           echo "---Run BAT Grant Command to provision access to secretmanager group---"     
           #bat grant -g=anypointConnectedAppSecretGroup -s=anypointClientIdAlias:secretApClientId,anypointClientSecretAlias:secretApClientSecret --forceUpdate --profile=connectedAppProfile
-          bat grant -g=monitorsecretgrp -s=mon-client-id-alias:monitorconappcliid,mon-client-secret-alias:monitorconappclisec
+          bat grant -g=monitorsecretgrp -s=mon-client-id-alias:monitorconappcliid,mon-client-secret-alias:monitorconappclisec --forceUpdate --profile=connectedAppProfile
           echo "---Run BAT Schedule command to schedule a monitor in Private space---"  
-          bat schedule endpoint www.example.com --cron="*/5 * * * *" --name=monitorApplicationUpTime --location=${ps_id} --email-list=harishsubramanian@salesforce.com
+          bat schedule endpoint www.example.com --cron="*/5 * * * *" --name=monitorApplicationUpTime --location=${ps_id} --email-list=harishsubramanian@salesforce.com --forceUpdate --profile=connectedAppProfile
 
 
       # Commit the changes (secrets added in previous step) to bat.yaml to main branch
