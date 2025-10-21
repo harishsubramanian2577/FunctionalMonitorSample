@@ -4,7 +4,7 @@ import * from bat::Mutable
 import toBase64 from dw::core::Binaries
 import * from dw::util::Values
 
-import tests::customFunctions
+//import tests::customFunctions
 
 var context = HashMap()
 
@@ -27,6 +27,13 @@ fun getApplicationStatus(id: String): Object =  (
         }
     }
 )
+
+fun shouldIgnoreIt(appName: String,ignoreList: String): Boolean = 
+     ignoreList contains(appName)
+
+fun descTestStatement(appName: String,ignoreList: String): String = 
+      if (shouldIgnoreIt(appName, ignoreList)) "Skipping test for '" ++ appName ++ "' as it is in ignoreList" else "Check if '" ++ appName ++ "' is Running" 
+
 
 ---
 describe ("Check-API-Health-Suite") in [
@@ -62,8 +69,8 @@ describe ("Check-API-Health-Suite") in [
       log("INFO", "Execution Completed")
     ]
   ],
-  it should "$((customFunctions::descTestStatement("checkperm-helloworld", appNamesIgnoreList)))" 
-    assuming (customFunctions::shouldIgnoreIt("checkperm-helloworld", appNamesIgnoreList) == false) in [
+  it should "$((descTestStatement("checkperm-helloworld", appNamesIgnoreList)))" 
+    assuming (shouldIgnoreIt("checkperm-helloworld", appNamesIgnoreList) == false) in [
     getApplicationStatus(context.get('checkperm-helloworld'))
     assert [
       $.response.status mustEqual 200,
@@ -74,8 +81,8 @@ describe ("Check-API-Health-Suite") in [
       log("INFO", "Execution Completed")
     ]
   ],
-  it should "$((customFunctions::descTestStatement("devlocation", appNamesIgnoreList)))" 
-    assuming (customFunctions::shouldIgnoreIt("devlocation", appNamesIgnoreList) == false) in [
+  it should "$((descTestStatement("devlocation", appNamesIgnoreList)))" 
+    assuming (shouldIgnoreIt("devlocation", appNamesIgnoreList) == false) in [
     getApplicationStatus(context.get('devlocation'))
     assert [
       $.response.status mustEqual 200,
@@ -86,8 +93,8 @@ describe ("Check-API-Health-Suite") in [
       log("INFO", "Execution Completed")
     ]
   ],
-  it should "$((customFunctions::descTestStatement("hello-world-3345", appNamesIgnoreList)))" 
-    assuming (customFunctions::shouldIgnoreIt("hello-world-3345", appNamesIgnoreList) == false) in [
+  it should "$((descTestStatement("hello-world-3345", appNamesIgnoreList)))" 
+    assuming (shouldIgnoreIt("hello-world-3345", appNamesIgnoreList) == false) in [
     getApplicationStatus(context.get('hello-world-3345'))
     assert [
       $.response.status mustEqual 200,
