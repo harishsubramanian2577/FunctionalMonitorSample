@@ -36,6 +36,7 @@ jobs:
       client_secret: ${{ secrets.ANYPOINT_CONNECTED_APP_CLIENTSECRET }}
       org_id:  ${{ secrets.ANYPOINT_ORG_ID }}
       env:  ${{ secrets.ANYPOINT_ENV }}
+      env_id:  ${{ secrets.ANYPOINT_ENV_ID }}
       ps_id: ${{ secrets.ANYPOINT_PS_ID }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -49,6 +50,13 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
+
+      - name: Replace string using sed
+        run: |
+          echo "----replacing orgid placeholder with ${org_id}----"
+          sed -i 's/##organizationId##/${org_id}/g' tests/helloWorldApps.dwl
+          echo "----replacing envid placeholder with ${env_id}----"
+          sed -i 's/##environmentId##/${env_id}/g' tests/helloWorldApps.dwl
           
       - name: Install BAT CLI
         run: curl -o- 'https://s3.amazonaws.com/bat-wrapper/install.sh' | bash

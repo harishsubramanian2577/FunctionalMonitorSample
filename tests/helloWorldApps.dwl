@@ -11,11 +11,19 @@ var context = HashMap()
 var cliId = secret('mon-client-id-alias') default 'Client ID not found'
 var cliSecret = secret('mon-client-secret-alias') default 'Client Secret not found'
 
-var api_deploy_endpoint = config.urlAppDeployDetails
-var api_appDeployDetails_endpoint = config.urlAppsDetails
-var api_auth_endpoint = config.urlAuth
-var orgId = config.organizationId
-var envId = config.environmentId
+//var orgId = config.organizationId
+//var envId = config.environmentId
+
+var orgId = "##organizationId##"
+var envId = "##environmentId##"
+
+var api_deploy_endpoint = 'https://anypoint.mulesoft.com/amc/adam/api/organizations/'+orgId+'/environments/'+envId
+var api_appDeployDetails_endpoint = 'https://anypoint.mulesoft.com/armui/api/v2/applications'
+var api_auth_endpoint = 'https://anypoint.mulesoft.com/accounts/api/v2/oauth2/token'
+
+//var api_deploy_endpoint = config.urlAppDeployDetails
+//var api_appDeployDetails_endpoint = config.urlAppsDetails
+//var api_auth_endpoint = config.urlAuth
 
 var appNamesIgnoreList = "checkperm-helloworld|devlocation"
 //var appNamesIgnoreList = config.ignoreList
