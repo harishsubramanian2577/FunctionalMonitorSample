@@ -34,9 +34,11 @@ jobs:
     env:
       client_id: ${{ secrets.ANYPOINT_CONNECTED_APP_CLIENTID }}
       client_secret: ${{ secrets.ANYPOINT_CONNECTED_APP_CLIENTSECRET }}
-      org_id:  ${{ secrets.ANYPOINT_ORG_ID }}
+      # org_id:  ${{ secrets.ANYPOINT_ORG_ID }}
+      org_id:  ${{ vars.ANYPOINT_ORG_ID }}
       env:  ${{ secrets.ANYPOINT_ENV }}
-      env_id:  ${{ secrets.ANYPOINT_ENV_ID }}
+      # env_id:  ${{ secrets.ANYPOINT_ENV_ID }}
+      env_id: ${{ vars.ANYPOINT_ENV_ID }}
       ps_id: ${{ secrets.ANYPOINT_PS_ID }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job

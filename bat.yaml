@@ -10,8 +10,8 @@ reporters:
   type: "Email"
   options:
     EMAILS: "harishsubramanian@salesforce.com"
-secrets:
-  mon-client-id-alias:
-    secretId: "cebebb98-5b3e-4391-b18a-f7934240794a"
-  mon-client-secret-alias:
-    secretId: "dbe4cbb1-5c07-43d8-b60a-dd152cead37f"
+# secrets:
+#   mon-client-id-alias:
+#     secretId: "cebebb98-5b3e-4391-b18a-f7934240794a"
+#   mon-client-secret-alias:
+#     secretId: "dbe4cbb1-5c07-43d8-b60a-dd152cead37f"
