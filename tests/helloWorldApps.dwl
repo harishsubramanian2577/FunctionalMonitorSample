@@ -14,9 +14,9 @@ var cliSecret = secret('mon-client-secret-alias') default 'Client Secret not fou
 //var orgId = config.organizationId
 //var envId = config.environmentId
 
-// Replace the ##organizationId## and ##environmentId## with actual values and uncomment below 2 lines before deploying
-var orgId = "##organizationId##"
-var envId = "##environmentId##"
+// Replace the a19065cb-4dd4-4916-9401-bb64b169742c and 2e16bf69-7e76-4387-ad51-1fdd939b4d86 with actual values and uncomment below 2 lines before deploying
+var orgId = "a19065cb-4dd4-4916-9401-bb64b169742c"
+var envId = "2e16bf69-7e76-4387-ad51-1fdd939b4d86"
 
 var api_deploy_endpoint = "https://anypoint.mulesoft.com/amc/adam/api/organizations/" ++ orgId ++ "/environments/" ++ envId ++ "/deployments"
 var api_appDeployDetails_endpoint = "https://anypoint.mulesoft.com/armui/api/v2/applications"
