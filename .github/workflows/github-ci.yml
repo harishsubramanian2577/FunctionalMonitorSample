@@ -6,9 +6,9 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev", "sit", "pat", "prod", "dr" ]
+  # pull_request:
+  #   branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -25,12 +25,92 @@ permissions:
   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  #setup-dev:
+  setup-dev:
+    if: github.ref == 'refs/heads/dev'
   # This workflow contains a single job called "build"
-  build:
+  # build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     environment: dev
+    env:
+      client_id: ${{ secrets.ANYPOINT_CONNECTED_APP_CLIENTID }}
+      client_secret: ${{ secrets.ANYPOINT_CONNECTED_APP_CLIENTSECRET }}
+      # org_id:  ${{ secrets.ANYPOINT_ORG_ID }}
+      org_id:  ${{ vars.ANYPOINT_ORG_ID }}
+      env:  ${{ secrets.ANYPOINT_ENV }}
+      # env_id:  ${{ secrets.ANYPOINT_ENV_ID }}
+      env_id: ${{ vars.ANYPOINT_ENV_ID }}
+      ps_id: ${{ secrets.ANYPOINT_PS_ID }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      # - name: Replace string using sed
+      #   run: |
+      #     echo "----replacing orgid placeholder with ${org_id}----"
+      #     sed -i 's/##organizationId##/${org_id}/g' tests/helloWorldApps.dwl
+      #     echo "----replacing envid placeholder with ${env_id}----"
+      #     sed -i 's/##environmentId##/${env_id}/g' tests/helloWorldApps.dwl
+          
+      - name: Install BAT CLI
+        run: curl -o- 'https://s3.amazonaws.com/bat-wrapper/install.sh' | bash
+      
+      # - name: Test with BAT
+      #   run: bat --config=dev
+
+      # Fetch client Id and secret from Github secrets when you need to run BAT CLI commands
+      # Fetch OrganizationId from Github secrets for bat organizations switch command
+      # For bat grant command, the secrets are already defined in secretGroup in anypoint secrets manager
+      # After execution of bat grant command, the secrets section will get added in the bat.yaml file
+
+      - name: Run a series of BAT commands
+        run: |
+          echo "---Run BAT Login to Anypoint with connected App credentials with ${client_id} and ${client_secret} ---"   
+          bat login --client-id=${client_id} --client-secret=${client_secret} --profile=connectedAppProfile
+          echo "---Run BAT Whoami---"     
+          bat whoami --profile=connectedAppProfile
+          echo "---Run BAT List Organizations---"
+          bat organizations list --profile=connectedAppProfile
+          echo "---Run BAT Switch to the respecitve Organization---"
+          bat organizations switch ${org_id} --profile=connectedAppProfile
+          echo "---Run BAT List Environments in selected Organization---"
+          bat environment list --profile=connectedAppProfile
+          echo "---Run BAT Switch to Development Environment in selected Organization---"
+          bat environment switch ${env} --profile=connectedAppProfile
+          echo "---Run BAT Grant Command to provision access to secretmanager group---"     
+          #bat grant -g=anypointConnectedAppSecretGroup -s=anypointClientIdAlias:secretApClientId,anypointClientSecretAlias:secretApClientSecret --forceUpdate --profile=connectedAppProfile
+          bat grant -g=monitorsecretgrp -s=mon-client-id-alias:monitorconappcliid,mon-client-secret-alias:monitorconappclisec --forceUpdate --profile=connectedAppProfile
+          # echo "---Run BAT Schedule command to schedule a monitor in Private space with env ${env} and locationId ${ps_id} ---" 
+          # BELOW COMMANDS DONT WORK - CONFORMED BY MULESOFT PRODUCT TEAM, ONLY OPTION IS TO MANUALLY UPLOAD THE MONITOR FROM UI
+          # bat schedule endpoint www.example.com --cron="*/5 * * * *" --name=monitorApplicationUpTime --location=${ps_id} --email-list=harishsubramanian@salesforce.com --forceUpdate --profile=connectedAppProfile
+          # bat schedule create --name="monitorApplicationUpTime" --config=${env} --cron="*/5 * * * *" --location=${ps_id} --email-list=harishsubramanian@salesforce.com --forceUpdate --profile=connectedAppProfile
+          # bat schedule create --target=${ps_id} --cron="*/5 * * * *"
+
+      # Commit the changes (secrets added in previous step) to bat.yaml to main branch
+      - name: Commit and Push changes to main branch
+        run: |
+          echo github.ref is ${{ github.ref }}, user.name is ${{ github.triggering_actor }}, user.email is ${{ github.event.sender.id }}${{ github.event.sender.login }}@users.noreply.github.com
+          git config --global user.name ${{ github.triggering_actor }}
+          git config --global user.email ${{ github.event.sender.id }}${{ github.event.sender.login }}@users.noreply.github.com
+          git commit -am "Secret alias details added to bat.yaml file"
+          git push origin ${{ github.ref }}
+
+  setup-test:
+    if: github.ref == 'refs/heads/test'
+  # This workflow contains a single job called "build"
+  # build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    environment: test
     env:
       client_id: ${{ secrets.ANYPOINT_CONNECTED_APP_CLIENTID }}
       client_secret: ${{ secrets.ANYPOINT_CONNECTED_APP_CLIENTSECRET }}
