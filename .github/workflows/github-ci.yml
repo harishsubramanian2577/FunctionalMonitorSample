@@ -89,12 +89,7 @@ jobs:
           echo "---Run BAT Grant Command to provision access to secretmanager group---"     
           #bat grant -g=anypointConnectedAppSecretGroup -s=anypointClientIdAlias:secretApClientId,anypointClientSecretAlias:secretApClientSecret --forceUpdate --profile=connectedAppProfile
           bat grant -g=monitorsecretgrp -s=mon-client-id-alias:monitorconappcliid,mon-client-secret-alias:monitorconappclisec --forceUpdate --profile=connectedAppProfile
-          # echo "---Run BAT Schedule command to schedule a monitor in Private space with env ${env} and locationId ${ps_id} ---" 
-          # BELOW COMMANDS DONT WORK - CONFORMED BY MULESOFT PRODUCT TEAM, ONLY OPTION IS TO MANUALLY UPLOAD THE MONITOR FROM UI
-          # bat schedule endpoint www.example.com --cron="*/5 * * * *" --name=monitorApplicationUpTime --location=${ps_id} --email-list=harishsubramanian@salesforce.com --forceUpdate --profile=connectedAppProfile
-          # bat schedule create --name="monitorApplicationUpTime" --config=${env} --cron="*/5 * * * *" --location=${ps_id} --email-list=harishsubramanian@salesforce.com --forceUpdate --profile=connectedAppProfile
-          # bat schedule create --target=${ps_id} --cron="*/5 * * * *"
-
+          
       # Commit the changes (secrets added in previous step) to bat.yaml to main branch
       - name: Commit and Push changes to main branch
         run: |
