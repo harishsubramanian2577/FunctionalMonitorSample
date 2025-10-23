@@ -54,12 +54,14 @@ jobs:
           distribution: 'zulu'
           java-version: 17
 
-      # - name: Replace string using sed
-      #   run: |
-      #     echo "----replacing orgid placeholder with ${org_id}----"
-      #     sed -i 's/##organizationId##/${org_id}/g' tests/helloWorldApps.dwl
-      #     echo "----replacing envid placeholder with ${env_id}----"
-      #     sed -i 's/##environmentId##/${env_id}/g' tests/helloWorldApps.dwl
+      - name: Replace string using sed
+        run: |
+          echo "----replacing orgid placeholder with ${org_id}----"
+          # sed -i 's/##organizationId##/${org_id}/g' tests/helloWorldApps.dwl
+          sed -i "s|##organizationId##|${{ vars.ANYPOINT_ORG_ID }}|g" tests/helloWorldApps.dwl
+          # echo "----replacing envid placeholder with ${env_id}----"
+          # sed -i 's/##environmentId##/${env_id}/g' tests/helloWorldApps.dwl
+          sed -i 's|##environmentId##|${{ vars.ANYPOINT_ENV_ID }}|g' tests/helloWorldApps.dwl
           
       - name: Install BAT CLI
         run: curl -o- 'https://s3.amazonaws.com/bat-wrapper/install.sh' | bash
