@@ -4,15 +4,10 @@ import * from bat::Mutable
 import toBase64 from dw::core::Binaries
 import * from dw::util::Values
 
-//import tests::customFunctions
-
 var context = HashMap()
 
 var cliId = secret('mon-client-id-alias') default 'Client ID not found'
 var cliSecret = secret('mon-client-secret-alias') default 'Client Secret not found'
-
-//var orgId = config.organizationId
-//var envId = config.environmentId
 
 // Replace the ##organizationId## and ##environmentId## with actual values and uncomment below 2 lines before deploying
 var orgId = "##organizationId##"
