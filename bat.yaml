@@ -3,7 +3,7 @@ suite:
   runnerVersion: "LATEST"
 files:
  -
-  file: "tests/helloWorldApps.dwl"
+  file: "tests/helloWorldAppsAll.dwl"
   softFail: false
 reporters:
  -
